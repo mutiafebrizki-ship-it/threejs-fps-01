@@ -123,7 +123,9 @@ function onLockChange(locked) {
   } else if (phase === 'matchEnd') {
     hud.showOverlay('matchEnd', `${match.state.matchWinner === 'atk' ? 'Attackers' : 'Defenders'} take Yard 7, ${match.state.score.atk} — ${match.state.score.def}.`);
   } else if (!body.alive) {
-    hud.showOverlay('paused');
+    // Dead players do not get a "paused" panel: they are spectating until the next
+    // round, and the button says so.
+    hud.showOverlay('down');
   } else {
     hud.showOverlay('paused');
   }
@@ -368,8 +370,10 @@ function step(dt) {
     roundEndAt = elapsed + 2.5;
     const winner = m.roundWinner === 'atk' ? 'Attackers' : 'Defenders';
     hud.banner(`${winner} win round ${m.round} — ${m.roundReason}`);
-    if (m.phase === 'roundEnd') audio.roundWin();
-    else audio.roundWin();
+    // The player is always an attacker: a round the attackers take is a win, and the
+    // other way is a loss, and they should sound different.
+    if (m.roundWinner === 'atk') audio.roundWin();
+    else audio.roundLose();
     if (m.phase === 'matchEnd') hud.banner(`${winner} take Yard 7, ${m.score.atk} — ${m.score.def}`);
   }
   if ((m.phase === 'roundEnd' || m.phase === 'matchEnd') && roundEndAt > 0 && elapsed >= roundEndAt) {

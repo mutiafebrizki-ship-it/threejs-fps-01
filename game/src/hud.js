@@ -15,6 +15,11 @@ const COPY = {
     copy: 'Paused. Click to resume.',
     action: 'Click to resume',
   },
+  down: {
+    title: 'You are down',
+    copy: 'Your team fights on without you. The round continues — watch it play out, and you will be back next round.',
+    action: 'Spectate',
+  },
   roundEnd: {
     title: 'Round over',
     copy: '',

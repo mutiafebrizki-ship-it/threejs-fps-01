@@ -10,7 +10,7 @@
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-threejs.ts';
@@ -33,4 +33,7 @@ writeFileSync(
 );
 
 // A line for the humans running this by hand: the dossier is written, the entry is ready.
-console.log(`SANDLINE dossier written to ${out}/dossier.json`);
+// The size is printed because the gate caps dossier.json at 1.5 MiB — a number that has
+// quietly crept past the cap before is caught here, not at submission.
+const dossierBytes = statSync(join(out, 'dossier.json')).size;
+console.log(`SANDLINE dossier written to ${out}/dossier.json (${dossierBytes} bytes)`);
